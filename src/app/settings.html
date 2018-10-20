@@ -7,7 +7,7 @@
         height: 200px;
         width: 300px;
         font-family: Helvetica, Ubuntu, Arial, sans-serif;
-        background-color: dimgray;
+        background-color: rgb(223, 223, 223);
     }
 
     h1 {
@@ -19,6 +19,7 @@
     /* The switch - the box around the slider */
     .switch {
         position: relative;
+        left:240px;
         display: inline-block;
         width: 60px;
         height: 34px;
@@ -78,13 +79,15 @@
         }
 </style>
 <head>
-    <title>Testing</title>
+    <title>Settings</title>
 </head>
 <body>
-    <label class="switch">
-        <input type="checkbox">
-        <span class="slider round"></span>
-    </label>
-    <p>This is a test</p>
+    <div id="mainPopup">
+        <label class="switch">
+            <input type="checkbox">
+            <span class="slider round"></span>
+        </label>
+    </div>
+    <p>Settings</p>
 </body>
 </html>
