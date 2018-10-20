@@ -6,8 +6,8 @@
   "version": "1.0",
 
   "permissions": [
-    "https://amazon.com/*"
-    "storage"
+    "https://amazon.com/*",
+    "storage",
     "history"
   ],
   "browser_action": {
