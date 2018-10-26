@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "manifest_version": 2,
   "description": "Allow users to compare prices of items found in the web with the price of the Amazon listed product",
+  "homepage_url": "http://extensionizr.com",
   "icons": {
     "16": "img/get_started16.png",
     "48": "img/get_started48.png",
@@ -11,7 +12,7 @@
   "default_locale": "en",
   "background": {
     "page": "src/bg/background.html",
-    "persistent": false
+    "persistent": true
   },
   "options_page": "src/options/settings.html",
   "browser_action": {
