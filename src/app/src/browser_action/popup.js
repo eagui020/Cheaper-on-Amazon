@@ -47,7 +47,7 @@ $(document).ready(function () {
         userInput = document.getElementById("searchBar").value;
         if(userInput == "") { return; } 
         var amazonUrlPrefix = "https://www.amazon.com/s/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=";
-        url = amazonUrlPrefix + userInput;
+        var url = amazonUrlPrefix + userInput;
         window.open(url);
     });
 });
