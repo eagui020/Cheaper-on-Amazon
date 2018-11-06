@@ -41,4 +41,13 @@ $(document).ready(function () {
     $("#history").click(function () {
         window.open('../history/history.html', '_blank');
     });
+
+    $("#search").click(function() {
+        var userInput = "";
+        userInput = document.getElementById("searchBar").value;
+        if(userInput == "") { return; } 
+        var amazonUrlPrefix = "https://www.amazon.com/s/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=";
+        url = amazonUrlPrefix + userInput;
+        window.open(url);
+    });
 });
