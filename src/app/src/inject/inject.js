@@ -80,7 +80,18 @@ chrome.storage.sync.get(null, function (result) {
         }
     }
 });
+window.addEventListener('load', function (evt) {
+	chrome.extension.getBackgroundPage().chrome.tabs.executeScript(null, {
+		file: 'payload.js'
+	});;
+});
 
+chrome.runtime.onMessage.addListener(function (message) {
+        if(message == "") { return; } 
+        var amazonUrlPrefix = "https://www.amazon.com/s/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=";
+        var url = amazonUrlPrefix + message;
+        window.open(url);
+});
 
 function GenerateFakespot() {
     // Get item name
