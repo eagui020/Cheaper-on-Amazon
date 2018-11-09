@@ -80,13 +80,10 @@ chrome.storage.sync.get(null, function (result) {
         }
     }
 });
-window.addEventListener('load', function (evt) {
-	chrome.extension.getBackgroundPage().chrome.tabs.executeScript(null, {
-		file: 'payload.js'
-	});;
-});
-
-chrome.runtime.onMessage.addListener(function (message) {
+//Change to onClick
+$("#buttonId").click(function() {
+		var message;
+		message = document.title;
         if(message == "") { return; } 
         var amazonUrlPrefix = "https://www.amazon.com/s/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=";
         var url = amazonUrlPrefix + message;
