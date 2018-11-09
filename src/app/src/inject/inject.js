@@ -4,7 +4,7 @@ chrome.storage.sync.get(null, function (result) {
         // Check if product page
         var div = document.getElementById("unifiedPrice_feature_div");
         if (div != null) {
-            
+
             // Create element
             var button = document.createElement("button");
             button.innerHTML = "<img src='https://cagrialdemir.com.tr/wp-content/uploads/CA-Logo.png' style='height:35px; width=40px;'/>&nbsp;<b>Price History</b>";
@@ -95,5 +95,20 @@ function GenerateFakespot() {
     }
     itemName = itemName.replace(/\/+/g, '-').replace(/\.+/g, '-').toLowerCase();
     itemName = itemName.replace(/\s+/g, '-').replace(/([^A-Za-z0-9-])+/g, "").replace(/-{2,}/g, "-").replace(/(amp-)/g, "");
-    // Add button to page
+    var button = document.createElement("button");
+    button.innerHTML = "<img src='https://cagrialdemir.com.tr/wp-content/uploads/CA-Logo.png' style='height:35px; width=40px;'/>&nbsp;<b>Review Rating</b>";
+
+    button.onclick = function () {
+        window.open('https://www.fakespot.com/product/' + itemName, '_blank');
+    };
+    button.style.height = "55px";
+    button.style.length = "210px";
+    button.style.fontSize = "20px";
+    button.style.margin = "5px";
+    button.style.backgroundColor = "lightblue";
+    button.style.textAlign = "justify";
+
+    var div = document.getElementById("unifiedPrice_feature_div");
+
+    div.appendChild(button);
 }
