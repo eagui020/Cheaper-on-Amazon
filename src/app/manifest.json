@@ -30,7 +30,9 @@
       "matches": [
         "*://*.amazon.com/gp/*",
         "*://*.amazon.com/dp/*",
-        "*://*.amazon.com/*/dp/*"
+        "*://*.amazon.com/*/dp/*",
+        "*://*.target.com/p/*",
+        "*://*.walmart.com/ip/*"
       ],
       "js": [
         "src/inject/inject.js"

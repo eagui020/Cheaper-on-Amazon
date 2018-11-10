@@ -1,94 +1,131 @@
 chrome.storage.sync.get(null, function (result) {
     var status = result.status;
     if (status === null || status === "on") {
-        // Check if product page
-        var div = document.getElementById("unifiedPrice_feature_div");
-        if (div != null) {
+        if (window.location.hostname != "smile.amazon.com" && window.location.hostname != "www.amazon.com")
+            GenerateSimilarItems();
+        else {
+            // Check if product page
+            var div = document.getElementById("unifiedPrice_feature_div");
+            if (div != null) {
 
-            // Create element
-            var button = document.createElement("button");
-            button.innerHTML = "<img src='https://cagrialdemir.com.tr/wp-content/uploads/CA-Logo.png' style='height:35px; width=40px;'/>&nbsp;<b>Price History</b>";
-            var urlpath = window.location.pathname.split('/');
-            var ASIN = "";
-            for (var i = 0; i < urlpath.length; i++) {
-                if (urlpath[i] == "dp" || urlpath[i] == "gp") {
-                    if (urlpath[i + 1] == "product") {
-                        ASIN = urlpath[i + 2];
-                    }
-                    else {
-                        ASIN = urlpath[i + 1];
-                    }
-                    break;
-                }
-            }
-
-            // Get item name
-            var itemName = "";
-            var titlediv = document.getElementById("productTitle");
-            if (titlediv == null) {
-                itemName = "undefined"
-            }
-            else {
-                itemName = titlediv.innerHTML;
-                itemName = itemName.trim();
-            }
-
-            // Update our search history
-            var url = [];
-            var name = [];
-            if (result.histUrl != null) {
-                url = result.histUrl;
-                name = result.histName;
-                if (!url.includes('https://camelcamelcamel.com/product/' + ASIN)) {
-                    if (url.length < 10) {
-                        url.unshift('https://camelcamelcamel.com/product/' + ASIN);
-                        name.unshift(itemName);
-                    }
-                    else {
-                        url.pop();
-                        name.pop();
-                        url.unshift('https://camelcamelcamel.com/product/' + ASIN);
-                        name.unshift(itemName);
+                // Create element
+                var button = document.createElement("button");
+                button.innerHTML = "<img src='https://cagrialdemir.com.tr/wp-content/uploads/CA-Logo.png' style='height:35px; width=40px;'/>&nbsp;<b>Price History</b>";
+                var urlpath = window.location.pathname.split('/');
+                var ASIN = "";
+                for (var i = 0; i < urlpath.length; i++) {
+                    if (urlpath[i] == "dp" || urlpath[i] == "gp") {
+                        if (urlpath[i + 1] == "product") {
+                            ASIN = urlpath[i + 2];
+                        }
+                        else {
+                            ASIN = urlpath[i + 1];
+                        }
+                        break;
                     }
                 }
-            }
-            else {
-                url.unshift('https://camelcamelcamel.com/product/' + ASIN);
-                name.unshift(itemName);
-            }
 
-            // Store our history and show price history
-            button.onclick = function () {
-                window.open('https://camelcamelcamel.com/product/' + ASIN, '_blank');
-                var history = result.history;
-                if (history == null || history == "on") {
-                    chrome.storage.sync.set({ 'histUrl': url });
-                    chrome.storage.sync.set({ 'histName': name });
+                // Get item name
+                var itemName = "";
+                var titlediv = document.getElementById("productTitle");
+                if (titlediv == null) {
+                    itemName = "undefined"
                 }
-            };
-            button.style.height = "55px";
-            button.style.length = "210px";
-            button.style.fontSize = "20px";
-            button.style.margin = "5px";
-            button.style.backgroundColor = "lightblue";
-            button.style.textAlign = "justify";
+                else {
+                    itemName = titlediv.innerHTML;
+                    itemName = itemName.trim();
+                }
 
-            // Append to somewhere on page
-            div.appendChild(button);
+                // Update our search history
+                var url = [];
+                var name = [];
+                if (result.histUrl != null) {
+                    url = result.histUrl;
+                    name = result.histName;
+                    if (!url.includes('https://camelcamelcamel.com/product/' + ASIN)) {
+                        if (url.length < 10) {
+                            url.unshift('https://camelcamelcamel.com/product/' + ASIN);
+                            name.unshift(itemName);
+                        }
+                        else {
+                            url.pop();
+                            name.pop();
+                            url.unshift('https://camelcamelcamel.com/product/' + ASIN);
+                            name.unshift(itemName);
+                        }
+                    }
+                }
+                else {
+                    url.unshift('https://camelcamelcamel.com/product/' + ASIN);
+                    name.unshift(itemName);
+                }
 
-            GenerateFakespot();
+                // Store our history and show price history
+                button.onclick = function () {
+                    window.open('https://camelcamelcamel.com/product/' + ASIN, '_blank');
+                    var history = result.history;
+                    if (history == null || history == "on") {
+                        chrome.storage.sync.set({ 'histUrl': url });
+                        chrome.storage.sync.set({ 'histName': name });
+                    }
+                };
+                button.style.height = "55px";
+                button.style.length = "210px";
+                button.style.fontSize = "20px";
+                button.style.margin = "5px";
+                button.style.backgroundColor = "lightblue";
+                button.style.textAlign = "justify";
+
+                // Append to somewhere on page
+                div.appendChild(button);
+
+                GenerateFakespot();
+            }
         }
     }
 });
-//Change to onClick
-$("#buttonId").click(function() {
-		var message;
-		message = document.title;
-        if(message == "") { return; } 
+
+function GenerateSimilarItems() {
+    var button = document.createElement("button");
+    button.innerHTML = "<img src='https://cagrialdemir.com.tr/wp-content/uploads/CA-Logo.png' style='height:35px; width=40px;'/>&nbsp;<b>Search Similar Items on Amazon</b>";
+    // Converted Ed's Click function for dynamic button building
+    button.onclick = function () {
+        var message = document.title;
+        if (message == "") { return; }
         var amazonUrlPrefix = "https://www.amazon.com/s/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=";
         var url = amazonUrlPrefix + message;
-        window.open(url);
-});
+        window.open(url, '_blank');
+    };
+    button.style.height = "55px";
+    button.style.length = "210px";
+    button.style.fontSize = "14px";
+    button.style.margin = "5px";
+    button.style.backgroundColor = "lightblue";
+    button.style.textAlign = "justify";
+
+    var header;
+    var div;
+    header = document.getElementsByClassName("product-offer-price")[0];
+    if (header == null) {
+        // This is a failed attempt to inject into Target's page. They wont let me.
+        var div = document.createElement("div");
+        div.style.zIndex = "99";
+        div.style.position = "absolute";
+        div.style.top = "10px";
+        div.style.right = "calc(50% - 244px)";
+        var parentDiv = document.getElementsByClassName("h-margin-v-tight")[0];
+        parentDiv.appendChild(div);
+        header = div;
+        setTimeout(function () {
+            header.appendChild(button);
+        }, 2000);
+    }
+    else {
+        header.appendChild(button);
+    }
+
+    
+}
 
 function GenerateFakespot() {
     // Get item name
