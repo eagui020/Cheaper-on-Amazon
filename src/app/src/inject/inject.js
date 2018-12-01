@@ -29,6 +29,10 @@ chrome.storage.sync.get(null, function (result) {
                     }
                 }
 
+                GetAmazonUPC(ASIN, function (UPC, amazPrice) {
+                    CompareToWalmart(UPC, amazPrice);
+                });
+
                 // Get item name
                 var itemName = "";
                 var titlediv = document.getElementById("productTitle");
@@ -216,6 +220,70 @@ function CompareToWalmart(UPC, amazPrice) {
         }
     };
     xmlhttp.open("GET", "https://api.walmartlabs.com/v1/items?format=json&apiKey=s2rd89kpnewdjpn7y2h35wga&upc=" + UPC, true);
+    xmlhttp.send();
+}
+
+function CompareOnAmazon(UPC, walPrice) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            var myObj = JSON.parse(this.responseText);
+
+            if (myObj.item.matched_items.length === 0) {
+                GenerateSimilarItemsAmazon();
+                return;
+            }
+            else {
+                var matched = myObj.item.matched_items[0];
+                var salePrice = matched.new_price;
+                var url = matched.url;
+                var color;
+                if (parseFloat(salePrice) < parseFloat(walPrice)) {
+                    //alert("Amazon better");
+                    color = "green";
+                }
+                else {
+                    //alert("Walmart better");
+                    color = "red";
+                }
+                var button = document.createElement("button");
+                button.innerHTML = "<img src='https://cagrialdemir.com.tr/wp-content/uploads/CA-Logo.png' style='height:35px; width=40px;'/>&nbsp;<b>Compared to Amazon</b>";
+                button.onclick = function () {
+                    window.open(url, '_blank');
+                };
+                button.style.height = "55px";
+                button.style.length = "210px";
+                button.style.fontSize = "8px";
+                button.style.margin = "5px";
+                button.style.backgroundColor = color;
+                button.style.textAlign = "justify";
+
+                var header;
+                header = document.getElementsByClassName("product-offer-price")[0];
+                header.appendChild(button);
+            }
+            
+        }
+    };
+    xmlhttp.open("GET", "https://api.barcodable.com/api/v1/upc/" + UPC, true);
+    xmlhttp.send();
+}
+
+function GetAmazonUPC(ASIN, amazCallback) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            var myObj = JSON.parse(this.responseText);
+            if (myObj.item.hasOwnProperty('upcs')) {
+                amazCallback(myObj.item.upcs[0], myObj.item.new_price);
+            }
+            else {
+                GenerateSimilarItemsWalmart();
+                return;
+            }
+        }
+    };
+    xmlhttp.open("GET", "https://api.barcodable.com/api/v1/asin/" + ASIN, true);
     xmlhttp.send();
 }
 
