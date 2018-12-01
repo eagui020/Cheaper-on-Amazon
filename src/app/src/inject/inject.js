@@ -212,6 +212,7 @@ function CompareToWalmart(UPC, amazPrice) {
                 button.style.margin = "5px";
                 button.style.backgroundColor = color;
                 button.style.textAlign = "justify";
+                button.title = "Walmart Price: $" + salePrice;
 
                 var header;
                 header = document.getElementById("unifiedPrice_feature_div");
@@ -257,6 +258,7 @@ function CompareOnAmazon(UPC, walPrice) {
                 button.style.margin = "5px";
                 button.style.backgroundColor = color;
                 button.style.textAlign = "justify";
+                button.title = "Amazon Price: $" + salePrice; 
 
                 var header;
                 header = document.getElementsByClassName("product-offer-price")[0];
@@ -300,6 +302,24 @@ function GenerateFakespot() {
     }
     itemName = itemName.replace(/\/+/g, '-').replace(/\.+/g, '-').toLowerCase();
     itemName = itemName.replace(/\s+/g, '-').replace(/([^A-Za-z0-9-])+/g, "").replace(/-{2,}/g, "-").replace(/(amp-)/g, "");
+
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            var myObj = JSON.parse(this.responseText);
+            if (myObj.item.hasOwnProperty('upcs')) {
+                amazCallback(myObj.item.upcs[0], myObj.item.new_price);
+            }
+            else {
+                GenerateSimilarItemsWalmart();
+                return;
+            }
+        }
+    };
+    xmlhttp.open("GET", "https://api.barcodable.com/api/v1/asin/" + ASIN, true);
+    XMLHttp
+    xmlhttp.send();
+
     var button = document.createElement("button");
     button.innerHTML = "<img src='https://cagrialdemir.com.tr/wp-content/uploads/CA-Logo.png' style='height:35px; width=40px;'/>&nbsp;<b>Review Rating</b>";
 

@@ -12,7 +12,7 @@
   "default_locale": "en",
   "background": {
     "page": "src/bg/background.html",
-    "persistent": true
+    "persistent": false
   },
   "options_page": "src/options/settings.html",
   "browser_action": {
@@ -25,7 +25,8 @@
     "https://amazon.com/*",
     "storage",
     "*://api.walmartlabs.com/*",
-    "https://api.barcodable.com/*"
+    "https://api.barcodable.com/*",
+    "https://www.fakespot.com/"
   ],
   "content_scripts": [
     {
