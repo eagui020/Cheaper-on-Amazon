@@ -208,11 +208,12 @@ function CompareToWalmart(UPC, amazPrice) {
                 };
                 button.style.height = "55px";
                 button.style.length = "210px";
-                button.style.fontSize = "8px";
+                button.style.fontSize = "16px";
                 button.style.margin = "5px";
                 button.style.backgroundColor = color;
                 button.style.textAlign = "justify";
                 button.title = "Walmart Price: $" + salePrice;
+                button.style.color = "white";
 
                 var header;
                 header = document.getElementById("unifiedPrice_feature_div");
@@ -254,11 +255,12 @@ function CompareOnAmazon(UPC, walPrice) {
                 };
                 button.style.height = "55px";
                 button.style.length = "210px";
-                button.style.fontSize = "8px";
+                button.style.fontSize = "16px";
                 button.style.margin = "5px";
                 button.style.backgroundColor = color;
                 button.style.textAlign = "justify";
                 button.title = "Amazon Price: $" + salePrice; 
+                button.style.color = "white";
 
                 var header;
                 header = document.getElementsByClassName("product-offer-price")[0];
@@ -306,34 +308,49 @@ function GenerateFakespot() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-            var myObj = JSON.parse(this.responseText);
-            if (myObj.item.hasOwnProperty('upcs')) {
-                amazCallback(myObj.item.upcs[0], myObj.item.new_price);
-            }
-            else {
-                GenerateSimilarItemsWalmart();
-                return;
+            var parser = new DOMParser();
+            var body = parser.parseFromString(this.responseText, "text/html");
+            grade = body.getElementsByClassName("grade-box")[0].childNodes[0].innerHTML;
+
+            var button = document.createElement("button");
+            button.innerHTML = "<b><span style='font-size:32px;'>" + grade + "</span>&nbsp;Review Rating</b>";
+
+            button.onclick = function () {
+                window.open('https://www.fakespot.com/product/' + itemName, '_blank');
+            };
+            button.style.height = "55px";
+            button.style.length = "210px";
+            button.style.fontSize = "18px";
+            button.style.margin = "5px";
+            button.style.backgroundColor = "lightblue";
+            button.style.textAlign = "justify";
+
+            var div = document.getElementById("unifiedPrice_feature_div");
+
+            div.appendChild(button);
+        }
+        else if (this.status === 404) {
+            if (document.getElementById('NoReviewsFoundBtn') === null) {
+                var button2 = document.createElement("button");
+                button2.innerHTML = "<b>No Review Rating Found</b>";
+
+                button2.onclick = function () {
+                    window.open('https://www.fakespot.com/', '_blank');
+                };
+                button2.id = "NoReviewsFoundBtn";
+                button2.style.height = "55px";
+                button2.style.length = "210px";
+                button2.style.fontSize = "20px";
+                button2.style.margin = "5px";
+                button2.style.backgroundColor = "lightblue";
+                button2.style.textAlign = "justify";
+
+                var div2 = document.getElementById("unifiedPrice_feature_div");
+
+                div2.appendChild(button2);
             }
         }
     };
-    xmlhttp.open("GET", "https://api.barcodable.com/api/v1/asin/" + ASIN, true);
-    XMLHttp
+    xmlhttp.open("GET", 'https://www.fakespot.com/product/' + itemName, true);
     xmlhttp.send();
-
-    var button = document.createElement("button");
-    button.innerHTML = "<img src='https://cagrialdemir.com.tr/wp-content/uploads/CA-Logo.png' style='height:35px; width=40px;'/>&nbsp;<b>Review Rating</b>";
-
-    button.onclick = function () {
-        window.open('https://www.fakespot.com/product/' + itemName, '_blank');
-    };
-    button.style.height = "55px";
-    button.style.length = "210px";
-    button.style.fontSize = "20px";
-    button.style.margin = "5px";
-    button.style.backgroundColor = "lightblue";
-    button.style.textAlign = "justify";
-
-    var div = document.getElementById("unifiedPrice_feature_div");
-
-    div.appendChild(button);
 }
