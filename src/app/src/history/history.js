@@ -8,7 +8,7 @@ chrome.storage.sync.get(null, function (result) {
 		// Dynamically create search history list
 		var div = document.createElement('div');
 		div.className = "card w-50 mx-auto";
-		div.innerHTML = "<div class='card-body'> <a href='" + histUrl + "' style='display: block; text-align: center; text-decoration: none;'>" + histName + "</a> </div>"
+        div.innerHTML = "<div class='card-body'> <a href='" + histUrl + "' style='display: block; text-align: center; text-decoration: none;'>" + histName + "</a> </div>";
 		document.body.appendChild(div);
 	}
 }); 

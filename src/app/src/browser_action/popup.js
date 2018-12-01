@@ -8,7 +8,13 @@ $(document).ready(function () {
     var onoff;
     chrome.storage.sync.get('status', function (result) {
         status = result.status;
-        if (status == null || status == "on") {
+        if (status === null) {
+            $("#onoff").prop('checked', true);
+            onoff = true;
+            chrome.storage.sync.set({ 'status': "on" });
+            chrome.browserAction.setIcon({ path: "../../img/get_started32.png" });
+        }
+        else if (status === "on") {
             $("#onoff").prop('checked', true);
             onoff = true;
             chrome.browserAction.setIcon({ path: "../../img/get_started32.png" });
@@ -45,7 +51,7 @@ $(document).ready(function () {
     $("#search").click(function() {
         var userInput = "";
         userInput = document.getElementById("searchBar").value;
-        if(userInput == "") { return; } 
+        if(userInput === "") { return; } 
         var amazonUrlPrefix = "https://www.amazon.com/s/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=";
         var url = amazonUrlPrefix + userInput;
         window.open(url);

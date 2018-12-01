@@ -23,7 +23,9 @@
   "permissions": [
     "history",
     "https://amazon.com/*",
-	  "storage"
+    "storage",
+    "*://api.walmartlabs.com/*",
+    "https://api.barcodable.com/*"
   ],
   "content_scripts": [
     {

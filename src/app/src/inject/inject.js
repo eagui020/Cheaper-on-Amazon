@@ -1,21 +1,25 @@
 chrome.storage.sync.get(null, function (result) {
     var status = result.status;
     if (status === null || status === "on") {
-        if (window.location.hostname != "smile.amazon.com" && window.location.hostname != "www.amazon.com")
-            GenerateSimilarItems();
+        if (window.location.hostname !== "smile.amazon.com" && window.location.hostname !== "www.amazon.com") {
+            GetWalmartUPC(function (UPC, walPrice) {
+                CompareOnAmazon(UPC, walPrice);
+            });
+
+
+        }
         else {
             // Check if product page
             var div = document.getElementById("unifiedPrice_feature_div");
-            if (div != null) {
-
+            if (div !== null) {
                 // Create element
                 var button = document.createElement("button");
                 button.innerHTML = "<img src='https://cagrialdemir.com.tr/wp-content/uploads/CA-Logo.png' style='height:35px; width=40px;'/>&nbsp;<b>Price History</b>";
                 var urlpath = window.location.pathname.split('/');
                 var ASIN = "";
                 for (var i = 0; i < urlpath.length; i++) {
-                    if (urlpath[i] == "dp" || urlpath[i] == "gp") {
-                        if (urlpath[i + 1] == "product") {
+                    if (urlpath[i] === "dp" || urlpath[i] === "gp") {
+                        if (urlpath[i + 1] === "product") {
                             ASIN = urlpath[i + 2];
                         }
                         else {
@@ -28,8 +32,8 @@ chrome.storage.sync.get(null, function (result) {
                 // Get item name
                 var itemName = "";
                 var titlediv = document.getElementById("productTitle");
-                if (titlediv == null) {
-                    itemName = "undefined"
+                if (titlediv === null) {
+                    itemName = "undefined";
                 }
                 else {
                     itemName = titlediv.innerHTML;
@@ -39,7 +43,7 @@ chrome.storage.sync.get(null, function (result) {
                 // Update our search history
                 var url = [];
                 var name = [];
-                if (result.histUrl != null) {
+                if (result.histUrl !== null) {
                     url = result.histUrl;
                     name = result.histName;
                     if (!url.includes('https://camelcamelcamel.com/product/' + ASIN)) {
@@ -64,7 +68,7 @@ chrome.storage.sync.get(null, function (result) {
                 button.onclick = function () {
                     window.open('https://camelcamelcamel.com/product/' + ASIN, '_blank');
                     var history = result.history;
-                    if (history == null || history == "on") {
+                    if (history === null || history === "on") {
                         chrome.storage.sync.set({ 'histUrl': url });
                         chrome.storage.sync.set({ 'histName': name });
                     }
@@ -85,13 +89,16 @@ chrome.storage.sync.get(null, function (result) {
     }
 });
 
-function GenerateSimilarItems() {
+function GenerateSimilarItemsAmazon() {
     var button = document.createElement("button");
-    button.innerHTML = "<img src='https://cagrialdemir.com.tr/wp-content/uploads/CA-Logo.png' style='height:35px; width=40px;'/>&nbsp;<b>Search Similar Items on Amazon</b>";
+    button.innerHTML = "<img src='https://cagrialdemir.com.tr/wp-content/uploads/CA-Logo.png' style='height:25px; width=40px;'/>&nbsp;<b>Search Similar Items on Amazon</b>";
     // Converted Ed's Click function for dynamic button building
     button.onclick = function () {
         var message = document.title;
-        if (message == "") { return; }
+        if (message.includes(" - Walmart.com")){
+            message = message.replace(" - Walmart.com", "");
+        }
+        if (message === "") { return; }
         var amazonUrlPrefix = "https://www.amazon.com/s/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=";
         var url = amazonUrlPrefix + message;
         window.open(url, '_blank');
@@ -106,9 +113,9 @@ function GenerateSimilarItems() {
     var header;
     var div;
     header = document.getElementsByClassName("product-offer-price")[0];
-    if (header == null) {
+    if (header === null) {
         // This is a failed attempt to inject into Target's page. They wont let me.
-        var div = document.createElement("div");
+        div = document.createElement("div");
         div.style.zIndex = "99";
         div.style.position = "absolute";
         div.style.top = "10px";
@@ -123,16 +130,101 @@ function GenerateSimilarItems() {
     else {
         header.appendChild(button);
     }
+}
 
-    
+function GenerateSimilarItemsWalmart() {
+    var button = document.createElement("button");
+    button.innerHTML = "<img src='https://cagrialdemir.com.tr/wp-content/uploads/CA-Logo.png' style='height:25px; width=40px;'/>&nbsp;<b>Search Similar Items on Walmart</b>";
+    button.onclick = function () {
+        var message = document.title;
+        if (message.includes("Amazon.com: ")){
+            message = message.replace("Amazon.com: ", "");
+            message = message.split(':')[0];
+        }
+        if (message === "") { return; }
+        var walmartUrlPrefix = "https://www.walmart.com/search/?query=";
+        var url = walmartUrlPrefix + message;
+        window.open(url, '_blank');
+    };
+    button.style.height = "55px";
+    button.style.length = "210px";
+    button.style.fontSize = "14px";
+    button.style.margin = "5px";
+    button.style.backgroundColor = "lightblue";
+    button.style.textAlign = "justify";
+
+    var header;
+    var div;
+    header = document.getElementById("unifiedPrice_feature_div");
+    header.appendChild(button);
+}
+
+function GetWalmartUPC(callback) {
+    var SKU;
+    var URL = window.location.pathname;
+    SKU = URL.split('/')[3];
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            var myObj = JSON.parse(this.responseText);
+            callback(myObj.upc, myObj.salePrice);
+        }
+    };
+    xmlhttp.open("GET", "https://api.walmartlabs.com/v1/items/" + SKU + "?format=json&apiKey=s2rd89kpnewdjpn7y2h35wga", true);
+    xmlhttp.send();
+}
+
+function CompareToWalmart(UPC, amazPrice) {
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            var myObj = JSON.parse(this.responseText);
+
+            if (myObj.hasOwnProperty('errors')) {
+                GenerateSimilarItemsWalmart();
+                return;
+            }
+            else {
+                var items = myObj.items;
+                var salePrice = items[0].salePrice;
+                var url = items[0].productUrl;
+                var color;
+                if (parseFloat(salePrice) < parseFloat(amazPrice)) {
+                    //alert("Walmart better");
+                    color = "green";
+                }
+                else {
+                    //alert("Amaz better");
+                    color = "red";
+                }
+                var button = document.createElement("button");
+                button.innerHTML = "<img src='https://cagrialdemir.com.tr/wp-content/uploads/CA-Logo.png' style='height:35px; width=40px;'/>&nbsp;<b>Compared to Walmart</b>";
+                button.onclick = function () {
+                    window.open(url, '_blank');
+                };
+                button.style.height = "55px";
+                button.style.length = "210px";
+                button.style.fontSize = "8px";
+                button.style.margin = "5px";
+                button.style.backgroundColor = color;
+                button.style.textAlign = "justify";
+
+                var header;
+                header = document.getElementById("unifiedPrice_feature_div");
+                header.appendChild(button);
+            }
+        }
+    };
+    xmlhttp.open("GET", "https://api.walmartlabs.com/v1/items?format=json&apiKey=s2rd89kpnewdjpn7y2h35wga&upc=" + UPC, true);
+    xmlhttp.send();
 }
 
 function GenerateFakespot() {
     // Get item name
     var itemName = "";
     var titlediv = document.getElementById("productTitle");
-    if (titlediv == null) {
-        itemName = "undefined"
+    if (titlediv === null) {
+        itemName = "undefined";
     }
     else {
         itemName = titlediv.innerHTML;
