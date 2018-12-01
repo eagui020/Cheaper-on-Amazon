@@ -54,6 +54,29 @@ $(document).ready(function () {
         if(userInput === "") { return; } 
         var amazonUrlPrefix = "https://www.amazon.com/s/ref=nb_sb_noss_1?url=search-alias%3Daps&field-keywords=";
         var url = amazonUrlPrefix + userInput;
+        
+        //store search in history
+        var urlH = [];
+        var nameH = [];
+        chrome.storage.sync.get(null, function(result) {
+            urlH = result.searchHistUrl;
+            nameH = result.searchHistName;
+
+            if(urlH.length < 10) { // only store last 10 searches
+                urlH.unshift(url);
+                nameH.unshift(userInput);
+            }
+            else { //pop oldest search before saving new search
+                urlH.pop();
+                nameH.pop();
+                urlH.unshift(url);
+                nameH.unshift(userInput);
+            }
+
+            chrome.storage.sync.set({ 'searchHistUrl': urlH});
+            chrome.storage.sync.set({ 'searchHistName': nameH});
+        });
+        
         window.open(url);
     });
 });

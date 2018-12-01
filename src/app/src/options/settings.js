@@ -61,4 +61,33 @@
             chrome.storage.sync.set({ 'history': "on" });
         }
     });
+
+    var searchHistory = "";
+    var saveSearch;
+    chrome.storage.sync.get('searchHistory', function(result) {
+        searchHistory = result.searchHistory;
+        if(searchHistory == null || searchHistory == "on") {
+            $("#savesearch").prop('checked', true);
+            saveSearch = true;
+        }
+        else {
+            $("#savesearch").prop('checked', false);
+            saveSearch = false;
+        }
+    });
+
+    $(".savesearch").click(function(tab) {
+        if ($("#savesearch").prop('checked')) {
+            saveSearch = false;
+        }
+        else {
+            saveSearch = true;
+        }
+        if (!saveSearch) {
+            chrome.storage.sync.set({ 'savesearch': "off" });
+        }
+        else {
+            chrome.storage.sync.set({ 'savesearch': "on" });
+        }
+    });
 });
