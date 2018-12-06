@@ -8,15 +8,32 @@
 <body style="background-color:aliceblue;">
     <h1 style="margin:40px;">Settings</h1>
     <div class="card w-50 mx-auto">
-        <div class="card-body">
+        <body class="card-body">
             <div>
-                <h5 class="card-title left" style="margin-left:30px; padding-top:10px; width:120px;">Off / On</h5>
+                    <h5 class="card-title left" style="margin-left:30px; padding-top:10px; width:120px;">Off / On</h5>
+            </div>
+            <div>
                 <p class="card-text left" style="margin-left:80px; padding-top:10px;">Enable or disable the chome extension.</p>
                 <label class="switch right" style="margin-right:20px;">
                     <input type="checkbox" id="onoff">
                     <span class="slider round onoff"></span>
                 </label>
                 
+            </div>
+        </body>
+    </div>
+    <br>
+    <div class="card w-50 mx-auto">
+        <body class="card-body">
+            <div>
+                    <h5 class="card-title left" style="margin-left:30px; padding-top:10px; width:120px;">Save History</h5>
+            </div>
+            <div>
+                <p class="card-text left" style="margin-left:80px; padding-top:10px;">Enable or disable the saving of price history lookups locally.</p>
+                <label class="switch right" style="margin-right:20px;">
+                    <input type="checkbox" id="savehistory">
+                    <span class="slider round savehistory"></span>
+                </label>
             </div>
             <div>
                 <p class="card-text left" style="margin-left:80px; padding-top:10px;">Enable or disable the saving of product searches via the search bar.</p>
@@ -25,20 +42,7 @@
                     <span class="slider round savesearch"></span>
                 </label>
             </div>
-        </div>
-    </div>
-    <br>
-    <div class="card w-50 mx-auto">
-        <div class="card-body">
-            <div>
-                <h5 class="card-title left" style="margin-left:30px; padding-top:10px; width:120px;">Save History</h5>
-                <p class="card-text left" style="margin-left:80px; padding-top:10px;">Enable or disable the saving of price history lookups locally.</p>
-                <label class="switch right" style="margin-right:20px;">
-                    <input type="checkbox" id="savehistory">
-                    <span class="slider round savehistory"></span>
-                </label>
-            </div>
-        </div>
+        </body>
     </div>
 </body>
 </html>
