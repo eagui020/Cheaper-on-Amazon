@@ -72,7 +72,7 @@ chrome.storage.sync.get(null, function (result) {
                 button.onclick = function () {
                     window.open('https://camelcamelcamel.com/product/' + ASIN, '_blank');
                     var history = result.history;
-                    if (history === null || history === "on") {
+                    if (history == null || history == "on") {
                         chrome.storage.sync.set({ 'histUrl': url });
                         chrome.storage.sync.set({ 'histName': name });
                     }
@@ -83,6 +83,7 @@ chrome.storage.sync.get(null, function (result) {
                 button.style.margin = "5px";
                 button.style.backgroundColor = "lightblue";
                 button.style.textAlign = "justify";
+                
 
                 // Append to somewhere on page
                 div.appendChild(button);
